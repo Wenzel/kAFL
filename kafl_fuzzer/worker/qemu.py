@@ -28,7 +28,7 @@ class QemuIOException(Exception):
         pass
 
 class qemu:
-    payload_header_size = 4 # must correspond to set_payload() and nyx_api.h
+    payload_header_size = 8 # must correspond to set_payload() and nyx_api.h
 
 
     def __init__(self, pid, config, debug_mode=False, notifiers=True, resume=False):
@@ -43,6 +43,7 @@ class qemu:
         self.alt_bitmap = bytearray(self.bitmap_size)
         self.alt_edges = 0
         self.bb_seen = 0
+        self.agent_flags = 0
 
         self.process = None
         self.control = None
@@ -499,6 +500,9 @@ class qemu:
     def get_payload_limit(self):
         return self.payload_limit
 
+    def set_agent_flags(self, value):
+        self.agent_flags = value
+
     def set_payload(self, payload):
         # Ensure the payload fits into SHM. Caller has to cut off since they also report findings.
         # actual payload is limited to payload_size - sizeof(uint32) - sizeof(uint8)
@@ -507,8 +511,8 @@ class qemu:
         #if len(payload) > self.payload_limit:
         #    payload = payload[:self.payload_limit]
         try:
-            struct.pack_into("=I", self.fs_shm, 0, len(payload))
-            self.fs_shm.seek(4)
+            struct.pack_into("=II", self.fs_shm, 0, self.agent_flags, len(payload))
+            self.fs_shm.seek(8)
             self.fs_shm.write(payload)
             #self.fs_shm.flush()
         except ValueError:
