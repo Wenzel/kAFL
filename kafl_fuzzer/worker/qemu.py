@@ -137,7 +137,7 @@ class qemu:
                 self.cmd.append("path=%s,load=off" % snapshot_path)
         else:
             # boot and wait for snapshot creation (or load from existing file)
-            self.cmd.append("path=%s,load=on" % (snapshot_path))
+            self.cmd.append("path=%s,load=off" % (snapshot_path))
 
         # Qemu extra options
         if self.config.qemu_extra:
