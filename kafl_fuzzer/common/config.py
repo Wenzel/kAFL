@@ -17,11 +17,6 @@ from kafl_fuzzer.common.logger import logger
 
 
 
-class FullPath(argparse.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
-        setattr(namespace, self.dest, os.path.abspath(os.path.expanduser(values)))
-
-
 def create_dir(dirname):
     if not os.path.isdir(dirname):
         try:
@@ -31,21 +26,25 @@ def create_dir(dirname):
             raise argparse.ArgumentTypeError(msg)
     return dirname
 
+def parse_pathlike(pathname):
+    return os.path.abspath(
+            os.path.expanduser(
+                os.path.expandvars(pathname)))
 
 def parse_is_dir(dirname):
-    if not os.path.isdir(dirname):
-        msg = "{0} is not a directory".format(dirname)
+    expanded = parse_pathlike(dirname)
+    if not os.path.isdir(expanded):
+        msg = "{0} is not a directory (expanded: {1})".format(dirname, expanded)
         raise argparse.ArgumentTypeError(msg)
-    else:
-        return dirname
+    return expanded
 
 
 def parse_is_file(dirname):
-    if not os.path.isfile(dirname):
-        msg = "{0} is not a file".format(dirname)
+    expanded = parse_pathlike(dirname)
+    if not os.path.isfile(expanded):
+        msg = "{0} is not a file (expanded: {1})".format(dirname, expanded)
         raise argparse.ArgumentTypeError(msg)
-    else:
-        return dirname
+    return expanded
 
 
 def parse_ignore_range(string):
@@ -85,7 +84,7 @@ def hidden(msg, unmask=False):
 def add_args_general(parser):
     parser.add_argument('-h', '--help', action='help',
                         help='show this help message and exit')
-    parser.add_argument('-w', '--work-dir', metavar='<dir>', action=FullPath, type=str,
+    parser.add_argument('-w', '--work-dir', metavar='<dir>', type=parse_pathlike,
                         required=True, help='path to the output/working directory.')
     parser.add_argument('--purge', required=False, help='purge the working directory at startup.',
                         action='store_true', default=False)
@@ -104,9 +103,9 @@ def add_args_general(parser):
 
 # kAFL/Fuzzer-specific options
 def add_args_fuzzer(parser):
-    parser.add_argument('--seed-dir', required=False, metavar='<dir>', action=FullPath,
+    parser.add_argument('--seed-dir', required=False, metavar='<dir>',
                         type=parse_is_dir, help='path to the seed directory.')
-    parser.add_argument('--dict', required=False, metavar='<file>', type=parse_is_file, action=FullPath,
+    parser.add_argument('--dict', required=False, metavar='<file>', type=parse_is_file,
                         help='import dictionary file for use in havoc stage.', default=None)
     parser.add_argument('--funky', required=False, help='perform extra validation and store funky inputs.',
                         action='store_true', default=False)
@@ -147,7 +146,7 @@ def add_args_fuzzer(parser):
     parser.add_argument('--kickstart', metavar='<n>', help="kickstart fuzzing with <n> byte random strings (default 256, 0 to disable)",
                         type=int, required=False, default=256)
     parser.add_argument('--radamsa-path', metavar='<file>', help=hidden('path to radamsa executable'),
-                        type=parse_is_file, action=FullPath, required=False, default=None)
+                        type=parse_pathlike, required=False, default=None)
 
 
 # Qemu/Worker-specific launch options
@@ -158,15 +157,15 @@ def add_args_qemu(parser):
     config_default_append = 'nokaslr oops=panic nopti mitigations=off console=ttyS0'
 
     # BIOS/Image/Kernel load modes are partly exclusive, but we need at least one of them
-    parser.add_argument('--image', dest='qemu_image', metavar='<qcow2>', required=False, action=FullPath, 
+    parser.add_argument('--image', dest='qemu_image', metavar='<qcow2>', required=False,
                         type=parse_is_file, help='path to Qemu disk image.')
-    parser.add_argument('--snapshot', dest='qemu_snapshot', metavar='<dir>', required=False, action=FullPath,
+    parser.add_argument('--snapshot', dest='qemu_snapshot', metavar='<dir>', required=False,
                         type=parse_is_dir, help='path to VM pre-snapshot directory.')
-    parser.add_argument('--bios', dest='qemu_bios', metavar='<file>', required=False, action=FullPath, type=parse_is_file,
+    parser.add_argument('--bios', dest='qemu_bios', metavar='<file>', required=False, type=parse_is_file,
                         help='path to the BIOS image.')
-    parser.add_argument('--kernel', dest='qemu_kernel', metavar='<file>', required=False, action=FullPath,
+    parser.add_argument('--kernel', dest='qemu_kernel', metavar='<file>', required=False,
                         type=parse_is_file, help='path to the Kernel image.')
-    parser.add_argument('--initrd', dest='qemu_initrd', metavar='<file>', required=False, action=FullPath, type=parse_is_file,
+    parser.add_argument('--initrd', dest='qemu_initrd', metavar='<file>', required=False, type=parse_is_file,
                         help='path to the initrd/initramfs file.')
     parser.add_argument('--append', dest='qemu_append', metavar='<str>', help='Qemu -append option',
                         type=str, required=False, default=config_default_append)
@@ -191,7 +190,7 @@ def add_args_qemu(parser):
     parser.add_argument('-ip3', required=False, default=None, metavar='<n-m>', type=parse_range_ip_filter,
                         help=hidden('Set IP trace filter range 3 (should be page-aligned)'))
 
-    parser.add_argument('--sharedir', metavar='<dir>', required=False, action=FullPath,
+    parser.add_argument('--sharedir', metavar='<dir>', required=False,
                         type=parse_is_dir, help='path to the page buffer share directory.')
     parser.add_argument('-R', '--reload', metavar='<n>', help='snapshot-reload every N execs (default: 1)',
                         type=int, required=False, default=1)
@@ -229,7 +228,7 @@ def add_args_debug(parser):
                        '<redqueen-qemu>\trun redqueen debugger and print QEMU stdout\n' \
                        '<verify>\t\trun verifcation steps\n'
     
-    parser.add_argument('--input', metavar='<file/dir>', action=FullPath, type=str,
+    parser.add_argument('--input', metavar='<file/dir>', type=parse_is_file,
                         help='path to input file or workdir.')
     parser.add_argument('-n', '--iterations', metavar='<n>', help='execute <n> times (for some actions)',
                         default=5, type=int)
@@ -255,11 +254,11 @@ class ConfigArgsParser():
         # local / workdir config
         workdir_config = os.path.join(os.getcwd(), 'kafl.yaml')
         if os.path.exists(workdir_config):
-            config.set_file(workdir_config, base_for_paths=True)
+            config.set_file(workdir_config)
 
         # ENV based config
-        if 'KAFL_CONFIG' in os.environ:
-            config.set_file(os.environ['KAFL_CONFIG'], base_for_paths=True)
+        if 'KAFL_CONFIG_FILE' in os.environ:
+            config.set_file(os.environ['KAFL_CONFIG_FILE'])
 
         # merge all configs into a flat dictionary, delimiter = ':'
         config_values = FlatDict(config.flatten())
@@ -270,9 +269,7 @@ class ConfigArgsParser():
         for action in parser._actions:
             #print("action: %s" % repr(action))
             if action.dest in config_values:
-                if action.type == parse_is_file:
-                    action.default = config[action.dest].as_filename()
-                elif isinstance(action, argparse._AppendAction):
+                if isinstance(action, argparse._AppendAction):
                     assert("append are not supported in in yaml config")
                     #action.default = [config[action.dest].as_str()]
                 else:

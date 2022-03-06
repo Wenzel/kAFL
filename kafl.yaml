@@ -12,7 +12,7 @@
 # 5. Path + filename provided via KAFL_CONFIG environment variable
 # 6. command line arguments, including argparse @file option
 #
-# Options 4 and 5 support setting file/paths relative to config file location
+# File/path options support variable and user path expansion
 #
 # Copy this file to one of those search paths for customization.
 # Set KAFL_CONFIG_DEBUG to report any unrecognized config options.
