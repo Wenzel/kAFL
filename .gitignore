@@ -6,5 +6,12 @@ kafl_fuzzer/native/bitmap*.so
 kafl_fuzzer/tags
 kafl_fuzzer.egg-info
 build
+dist
 nyx/
 radamsa/
+
+# IDE
+.vscode
+
+# virtualenv
+venv

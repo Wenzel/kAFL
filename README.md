@@ -208,7 +208,25 @@ When running `west update -k`, west will keep your branches intact or print
 a message on how to restore them.
 
 
-## Further Reading (need updating!)
+## Documentation
+
+To built the documentation
+
+~~~
+cd docs
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements
+make html
+~~~
+
+To display the documentation in your browser (assuming `xdg-utils` package is installed)
+
+~~~
+xdg-open docs/_build/html/index.html
+~~~
+
+## Further Reading
 
 * Step-by-step guides for [Linux](docs/linux_tutorial.md) and [Windows](docs/windows_tutorial.md)
 * [Userspace fuzzing with sharedir](docs/sharedir_tutorial.md)
