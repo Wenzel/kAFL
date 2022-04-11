@@ -1,8 +1,6 @@
 .env
 .pipenv
 .west
-Pipfile
-Pipfile.lock
 manifest
 kafl
 examples
