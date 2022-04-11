@@ -20,19 +20,22 @@ system_check()
 		echo "According to /proc/cpuinfo this system has no intel_pt."
 		exit 1
 	fi
-
-	dist_id="$(lsb_release -si)"
-	if [ "$dist_id" != "Debian" -a "$dist_id" != "Ubuntu" ]; then
-		echo "[-] Error: This installer was tested using recent Debian and Ubuntu."
-		echo
-		echo "Other recent Linux distributions will generally work as well but"
-		echo "the installer will not be able to resolve the required dependencies."
-		echo
-		echo "It is recommended to abort the installer and instead follow this"
-		echo "script by hand, resolving any build/runtime errors as they come up."
-		echo
-		echo "Press [Ctrl-c] to abort or [Return] to continue.."
-		read
+	# if not inside container
+	if ! grep -Eq 'docker|lxc' /proc/1/cgroup; then
+		# can test lsb_release now
+		dist_id="$(lsb_release -si)"
+		if [ "$dist_id" != "Debian" -a "$dist_id" != "Ubuntu" ]; then
+			echo "[-] Error: This installer was tested using recent Debian and Ubuntu."
+			echo
+			echo "Other recent Linux distributions will generally work as well but"
+			echo "the installer will not be able to resolve the required dependencies."
+			echo
+			echo "It is recommended to abort the installer and instead follow this"
+			echo "script by hand, resolving any build/runtime errors as they come up."
+			echo
+			echo "Press [Ctrl-c] to abort or [Return] to continue.."
+			read
+		fi
 	fi
 
 	for i in dpkg apt-get sudo; do
@@ -42,7 +45,6 @@ system_check()
 			exit 1
 		fi
 	done
-
 }
 
 system_deps()
@@ -193,22 +195,25 @@ build_radamsa()
 
 system_perms()
 {
-	echo
-	echo "[*] Fix permissions for user access to /dev/kvm..."
-	echo
-	if ! sudo groupmod kvm; then
-		echo "Creating group kvm for user $USER to access /dev/kvm.."
+	# if not inside container
+	if ! grep -Eq 'docker|lxc' /proc/1/cgroup; then
+		echo
+		echo "[*] Fix permissions for user access to /dev/kvm..."
+		echo
+		if ! sudo groupmod kvm; then
+			echo "Creating group kvm for user $USER to access /dev/kvm.."
 
-		echo "KERNEL==\"kvm\", GROUP=\"kvm\"" | sudo -Eu root tee /etc/udev/rules.d/40-permissions.rules > /dev/null
-		sudo groupadd kvm
-		sudo usermod -a -G kvm $USER
-		sudo root service udev restart
-	else
-		if id|grep -q '(kvm)'; then
-			echo "KVM already seems to be setup for user $USER, skipping.."
-		else
-			echo "Group KVM already exists, adding this user $USER.."
+			echo "KERNEL==\"kvm\", GROUP=\"kvm\"" | sudo -Eu root tee /etc/udev/rules.d/40-permissions.rules > /dev/null
+			sudo groupadd kvm
 			sudo usermod -a -G kvm $USER
+			sudo root service udev restart
+		else
+			if id|grep -q '(kvm)'; then
+				echo "KVM already seems to be setup for user $USER, skipping.."
+			else
+				echo "Group KVM already exists, adding this user $USER.."
+				sudo usermod -a -G kvm $USER
+			fi
 		fi
 	fi
 }
