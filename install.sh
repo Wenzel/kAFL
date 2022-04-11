@@ -61,7 +61,7 @@ system_deps()
 	sudo apt-get install -y libcap-dev libattr1-dev # virtfs
 
 	echo "[*] Installing kAFL python dependencies ..."
-	pip3 install -r $KAFL_ROOT/requirements.txt
+	pipenv run pip3 install -r $KAFL_ROOT/requirements.txt
 }
 
 set_env()
