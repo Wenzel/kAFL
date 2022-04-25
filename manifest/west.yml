@@ -21,8 +21,8 @@ manifest:
 
     - name: kafl
       remote: github
-      repo-path: IntelLabs/kAFL
-      revision: master
+      repo-path: Wenzel/kAFL
+      revision: docker_compat
       groups:
         - kafl_fuzzer
 
