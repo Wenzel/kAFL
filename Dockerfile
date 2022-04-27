@@ -37,8 +37,11 @@ RUN mkdir -p /root/.config/kafl && \
     cp kafl/kafl.yaml /root/.config/kafl/config.yaml && \
     sed -i 's/qemu_path:.*/qemu_path: \/code\/kafl\/nyx\/qemu\/x86_64-softmmu\/qemu-system-x86_64/g' /root/.config/kafl/config.yaml && \
     sed -i 's/ptdump_path:.*/ptdump_path: \/code\/kafl\/nyx\/libxdc\/build\/ptdump/g' /root/.config/kafl/config.yaml && \
-    sed -i 's/radamsa_path:.*/radamsa_path: \/code\/kafl\/radamsa\/bin\/radamsa/g' /root/.config/kafl/config.yaml
+    sed -i 's/radamsa_path:.*/radamsa_path: \/code\/kafl\/radamsa\/bin\/radamsa/g' /root/.config/kafl/config.yaml && \
+    sed -i 's/qemu_append:.*/qemu_append: init=\/sbin\/init root=\/dev\/vda1 rw hprintf=4 lpj=300 force_tdx_guest tdx_wlist_devids=pci:0x8086:0x29c0,acpi:PNP0501 nokaslr nopti mitigations=off mce=off/g' /root/.config/kafl/config.yaml && \
+    sed -i 's/qemu_base:.*/qemu_base: -enable-kvm -machine kAFL64-v1 -cpu kAFL64-Hypervisor-v1,+vmx -smp 1 -no-reboot -display none -nodefaults -netdev user,id=mynet0 -device virtio-net,netdev=mynet0 -virtfs local,path=\/tmp\/kafl,mount_tag=tmp,security_model=mapped-file -device virtio-serial -device virtconsole,chardev=kafl_serial -device isa-serial,chardev=kafl_serial/g' /root/.config/kafl/config.yaml
 
+RUN mkdir -p /tmp/kafl
 
 # add venv to path
 ENV PATH="/code/.venv/bin:$PATH"
