@@ -20,7 +20,8 @@ RUN echo 'Defaults env_keep += "HTTP_PROXY HTTPS_PROXY http_proxy https_proxy"' 
 
 # Install pipenv
 RUN pip install pipenv
-COPY . /code
+COPY Pipfile Pipfile.lock Makefile /code/
+COPY manifest /code/manifest
 WORKDIR /code
 # --deploy will throw an error when the Pipfile.lock and Pipfile doesn't match
 # PIPENV_VENV_IN_PROJECT: creates a /.venv virtualenv directory
