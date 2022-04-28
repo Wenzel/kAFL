@@ -1,6 +1,9 @@
 Dockerfile
 .git
 .gitignore
+.env
+.venv
+.west
 kafl
 examples
 zephyrproject
