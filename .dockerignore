@@ -1,3 +1,6 @@
 Dockerfile
 .git
 .gitignore
+kafl
+examples
+zephyrproject
