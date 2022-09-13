@@ -167,6 +167,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../reference/deployment.html">Deployment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/hypercall_api.html">kAFL/Nyx Hypercall API</a></li>
 </ul>
 
@@ -231,8 +232,8 @@ Ubuntu (&gt;=<code class="docutils literal notranslate"><span class="pre">20.04<
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h2>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="3a7caed9-476b-4df6-a9ef-ccfbf5de879f" name="78cd4de1-cab9-4034-8dad-5c0ee7222ca2" type="radio">
-</input><label class="sd-tab-label" for="3a7caed9-476b-4df6-a9ef-ccfbf5de879f">
+<input checked="checked" id="e6348425-2691-4623-bc91-e8b6c6a15379" name="3555eafa-9bcc-4225-bf3c-cacf9694d891" type="radio">
+</input><label class="sd-tab-label" for="e6348425-2691-4623-bc91-e8b6c6a15379">
 Local</label><div class="sd-tab-content docutils">
 <p>The base installation is captured as an Ansible playbook which you can launch as follows:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>make deploy
@@ -241,14 +242,14 @@ Local</label><div class="sd-tab-content docutils">
 <p>Ansible setup will ask for your root password.
 If you are using a <em>passwordless sudo</em> setup, just skip this by pressing enter.</p>
 </div>
-<input id="a923b0d0-b74d-4148-a52c-ce19beeab45a" name="78cd4de1-cab9-4034-8dad-5c0ee7222ca2" type="radio">
-</input><label class="sd-tab-label" for="a923b0d0-b74d-4148-a52c-ce19beeab45a">
+<input id="3efe661f-e76f-4bdf-a3e2-ab09e8da4271" name="3555eafa-9bcc-4225-bf3c-cacf9694d891" type="radio">
+</input><label class="sd-tab-label" for="3efe661f-e76f-4bdf-a3e2-ab09e8da4271">
 Remote</label><div class="sd-tab-content docutils">
 <p>kAFL’s deployment offers the possibility of remote installation using Ansible.
 Update the <code class="docutils literal notranslate"><span class="pre">deploy/inventory</span></code> file according to the <a class="reference external" href="https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html">Ansible inventory
 guide</a>
-and make sure to <strong>remove</strong> the first line:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">localhost</span> <span class="n">ansible_connection</span><span class="o">=</span><span class="n">local</span>
+and make sure to <strong>remove</strong> the <code class="docutils literal notranslate"><span class="pre">localhost</span></code> host:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">localhost</span>
 </pre></div>
 </div>
 <p>Deployment will install kAFL to <code class="docutils literal notranslate"><span class="pre">$HOME/kafl</span></code> of the target machines:</p>
@@ -377,5 +378,7 @@ and make sure to <strong>remove</strong> the first line:</p>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="../_static/design-tabs.js"></script>
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
     </body>
 </html>
