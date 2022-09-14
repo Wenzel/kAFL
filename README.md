@@ -25,28 +25,7 @@ The project's documentation is hosted online at [![online_docs](https://img.shie
 
 To build the docs locally:
 ~~~
-<<<<<<< HEAD
-
-Ansible setup will ask for your root password.
-If you are using a _passwordless sudo_ setup, just skip this by pressing enter.
-
-## Remote Installation
-
-kAFL's deployment offers the possibility of remote installation using Ansible.
-Update the `deploy/inventory` file according to the [Ansible inventory
-guide](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html)
-and make sure to **remove** the `localhost` host:
-
-> localhost
-
-
-Deployment will install kAFL to `$HOME/kafl` of the target machines:
-
-~~~sh
-make deploy
-=======
 cd docs
 make html
 xdg-open build/html/index.html
->>>>>>> a0959ec (README: link to Sphinx docs)
 ~~~
