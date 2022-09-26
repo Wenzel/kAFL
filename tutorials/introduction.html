@@ -3,12 +3,13 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Getting Started with Linux Fuzzing" href="../how_to/linux_tutorial.html" /><link rel="prev" title="📗 kAFL’s Documentation" href="../index.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Installation" href="installation.html" /><link rel="prev" title="📗 kAFL’s Documentation" href="../index.html" />
 
     <meta name="generator" content="sphinx-5.1.0, furo 2022.06.21"/>
-        <title>Getting started - kAFL</title>
+        <title>Introduction - kAFL</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -135,7 +136,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -157,7 +158,9 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul class="current">
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Getting started</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fuzzing_linux_kernel.html">Fuzzing the Linux Kernel</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">How-To Guides</span></p>
 <ul>
@@ -189,7 +192,7 @@
         </a>
         <div class="content-icon-container">
           <div class="edit-this-page">
-  <a class="muted-link" href="https://github.com/Wenzel/kAFL/edit/docs/docs/source/tutorials/getting_started.md" title="Edit this page">
+  <a class="muted-link" href="https://github.com/Wenzel/kAFL/edit/docs/docs/source/tutorials/introduction.md" title="Edit this page">
     <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
       <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
@@ -205,89 +208,22 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
-          <section id="getting-started">
-<h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h1>
-<section id="requirements">
-<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading">#</a></h2>
-<ul class="simple">
-<li><p>The setup requires a Gen-6 or newer Intel CPU (for Intel PT) and sufficient
-RAM to run several VMs at once.</p></li>
-<li><p>A modifed Linux host kernel is required for VM-based snapshot fuzzing with
-Intel PT coverage feedback. Setup inside VM or container is not supported at
-this point.</p></li>
-<li><p>The userspace installation and fuzzing workflow has been tested for recent
-Ubuntu (&gt;=<code class="docutils literal notranslate"><span class="pre">20.04</span></code>) and Debian (&gt;=<code class="docutils literal notranslate"><span class="pre">bullseye</span></code>).</p></li>
-<li><p>The <em>Python3</em> interpreter and its <code class="docutils literal notranslate"><span class="pre">venv</span></code> module is required:</p></li>
-</ul>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo apt-get install python3 python3-venv
-</pre></div>
-</div>
-</section>
-<section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h2>
-<div class="sd-tab-set docutils">
-<input checked="checked" id="98142d97-9693-4613-b3a2-b86c0cc2c326" name="39a04f5d-f5f3-4908-aabc-d810f39d60c8" type="radio">
-</input><label class="sd-tab-label" for="98142d97-9693-4613-b3a2-b86c0cc2c326">
-Local</label><div class="sd-tab-content docutils">
-<p>The base installation is captured as an Ansible playbook which you can launch as follows:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>make deploy
-</pre></div>
-</div>
-<p>Ansible setup will ask for your root password.
-If you are using a <em>passwordless sudo</em> setup, just skip this by pressing enter.</p>
-</div>
-<input id="2e18439f-5d4c-43f4-9b18-dce5e4fe91f0" name="39a04f5d-f5f3-4908-aabc-d810f39d60c8" type="radio">
-</input><label class="sd-tab-label" for="2e18439f-5d4c-43f4-9b18-dce5e4fe91f0">
-Remote</label><div class="sd-tab-content docutils">
-<p>kAFL’s deployment offers the possibility of remote installation using Ansible.
-Update the <code class="docutils literal notranslate"><span class="pre">deploy/inventory</span></code> file according to the <a class="reference external" href="https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html">Ansible inventory
-guide</a>
-and make sure to <strong>remove</strong> the <code class="docutils literal notranslate"><span class="pre">localhost</span></code> host:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">localhost</span>
-</pre></div>
-</div>
-<p>Deployment will install kAFL to <code class="docutils literal notranslate"><span class="pre">$HOME/kafl</span></code> of the target machines:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>make deploy
-</pre></div>
-</div>
-<p>Note:</p>
-<ul class="simple">
-<li><p>If your nodes require a proxy setup, update the <code class="docutils literal notranslate"><span class="pre">group_vars/all.yml</span></code>.</p></li>
-<li><p>Check Ansible documentation for how to manage remote access.</p></li>
-</ul>
-</div>
-</div>
-</section>
-<section id="next-steps">
-<h2>Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this heading">#</a></h2>
-<section id="activate-the-environment">
-<h3>Activate the Environment<a class="headerlink" href="#activate-the-environment" title="Permalink to this heading">#</a></h3>
-<p>To work with the installation, activate the environment in your shell:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>make env
-</pre></div>
-</div>
-</section>
-<section id="example-targets">
-<h3>Example Targets<a class="headerlink" href="#example-targets" title="Permalink to this heading">#</a></h3>
-<p>Now that kAFL has been installed, you can continue by checking one of the example targets available.</p>
-<p>Clone the <a class="reference external" href="https://github.com/IntelLabs/kafl.targets">kafl.targets</a> repo into <code class="docutils literal notranslate"><span class="pre">&lt;install_dir&gt;/targets</span></code>:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>make deploy -- --tags targets
-</pre></div>
-</div>
-<p>The following examples are suitable as out-of-the-box test cases:</p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://github.com/IntelLabs/kafl.targets/tree/master/linux-kernel">Linux kernel</a>: Fuzz an OS kernel with a kAFL agent (harness) directly in the target</p></li>
-<li><p><a class="reference external" href="https://github.com/IntelLabs/kafl.targets/tree/master/zephyr_x86_32">Zephyr RTOS</a>: Simple fuzzing test cases based on Zephyr RTOS</p></li>
-<li><p><a class="reference external" href="https://github.com/IntelLabs/kAFL/issues/53">Windows</a>: This links to an opened issue since it’s a WIP</p></li>
-</ul>
-</section>
-</section>
+          <section id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h1>
+<p>This tutorial will introduce you to the <a class="reference external" href="https://github.com/IntelLabs/kAFL">kAFL</a> fuzzer, from the installation process to fuzzing a real target.</p>
+<p>Throughout this tutorial, we will$</p>
+<ol class="arabic simple">
+<li><p>install kAFL on your local machine</p></li>
+<li><p>fuzz a real linux kernel using the kAFL agent</p></li>
+<li><p>analyze the results.</p></li>
+</ol>
+<p>At the end of the tutorial you should have been able to find a few bugs, understand their root cause, have a better understanding of the overall kAFL setup and user interface, and be able to adapt kAFL to your targets using our reference documentation and how-to guides.</p>
 </section>
 
         </article>
@@ -295,12 +231,12 @@ and make sure to <strong>remove</strong> the <code class="docutils literal notra
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="../how_to/linux_tutorial.html">
+          <a class="next-page" href="installation.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Getting Started with Linux Fuzzing</div>
+                <div class="title">Installation</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -340,33 +276,8 @@ and make sure to <strong>remove</strong> the <code class="docutils literal notra
         
       </footer>
     </div>
-    <aside class="toc-drawer">
+    <aside class="toc-drawer no-toc">
       
-      
-      <div class="toc-sticky toc-scroll">
-        <div class="toc-title-container">
-          <span class="toc-title">
-            Contents
-          </span>
-        </div>
-        <div class="toc-tree-container">
-          <div class="toc-tree">
-            <ul>
-<li><a class="reference internal" href="#">Getting started</a><ul>
-<li><a class="reference internal" href="#requirements">Requirements</a></li>
-<li><a class="reference internal" href="#installation">Installation</a></li>
-<li><a class="reference internal" href="#next-steps">Next Steps</a><ul>
-<li><a class="reference internal" href="#activate-the-environment">Activate the Environment</a></li>
-<li><a class="reference internal" href="#example-targets">Example Targets</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-          </div>
-        </div>
-      </div>
       
       
     </aside>
@@ -377,6 +288,8 @@ and make sure to <strong>remove</strong> the <code class="docutils literal notra
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
     <script src="../_static/design-tabs.js"></script>
     <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>

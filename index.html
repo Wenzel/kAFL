@@ -3,12 +3,13 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Getting started" href="tutorials/getting_started.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Introduction" href="tutorials/introduction.html" />
 
     <meta name="generator" content="sphinx-5.1.0, furo 2022.06.21"/>
         <title>kAFL</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -157,7 +158,9 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/fuzzing_linux_kernel.html">Fuzzing the Linux Kernel</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">How-To Guides</span></p>
 <ul>
@@ -232,7 +235,8 @@ modifications.</p></li>
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/IntelLabs/kAFL"><code class="docutils literal notranslate"><span class="pre">IntelLabs/kAFL</span></code></a>: The main repository which organises all subcomponents</p></li>
 <li><p><a class="reference external" href="https://github.com/IntelLabs/kafl.fuzzer"><code class="docutils literal notranslate"><span class="pre">IntelLabs/kafl.fuzzer</span></code></a>: The fuzzer frontend</p></li>
-<li><p><a class="reference external" href="https://github.com/IntelLabs/kafl.qemu"><code class="docutils literal notranslate"><span class="pre">IntelLabs/kafl.qemu</span></code></a>: Modified QEMU with snapshots</p></li>
+<li><p><a class="reference external" href="https://github.com/IntelLabs/kafl.linux"><code class="docutils literal notranslate"><span class="pre">IntelLabs/kafl.linux</span></code></a>: Modified KVM with Intel PT and kAFL hypercalls support</p></li>
+<li><p><a class="reference external" href="https://github.com/IntelLabs/kafl.qemu"><code class="docutils literal notranslate"><span class="pre">IntelLabs/kafl.qemu</span></code></a>: Modified QEMU with fast-snapshots support</p></li>
 <li><p><a class="reference external" href="https://github.com/IntelLabs/kafl.libxdc"><code class="docutils literal notranslate"><span class="pre">IntelLabs/kafl.libxdc</span></code></a>: Fast Intel PT decoding library</p></li>
 <li><p><a class="reference external" href="https://github.com/IntelLabs/kafl.targets"><code class="docutils literal notranslate"><span class="pre">IntelLabs/kafl.targets</span></code></a>: Example kAFL targets</p></li>
 </ul>
@@ -242,10 +246,21 @@ modifications.</p></li>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/getting_started.html">Getting started</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/getting_started.html#requirements">Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/getting_started.html#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/getting_started.html#next-steps">Next Steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/installation.html#requirements">1. Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/installation.html#cloning-the-sources">2. Cloning the sources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/installation.html#deploying-kafl-make-deploy">3. Deploying kAFL : <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">deploy</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/installation.html#setting-kafl-environment-make-env">4. Setting kAFL environment : <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">env</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/installation.html#verify-the-installation">5. Verify the installation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/fuzzing_linux_kernel.html">Fuzzing the Linux Kernel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/fuzzing_linux_kernel.html#download-patched-linux-kernel-or-port-to-your-preferred-kernel">1. Download patched Linux kernel (or port to your preferred kernel)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/fuzzing_linux_kernel.html#configure-and-build-target-kernel">2. Configure and build target kernel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/fuzzing_linux_kernel.html#start-fuzzing">3. Start fuzzing!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/fuzzing_linux_kernel.html#next-steps">4. Next steps..</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/fuzzing_linux_kernel.html#known-issues">5. Known Issues</a></li>
 </ul>
 </li>
 </ul>
@@ -276,6 +291,7 @@ modifications.</p></li>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="reference/deployment.html">Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference/deployment.html#system-modifications">System modifications</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference/deployment.html#makefile-targets">Makefile targets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference/deployment.html#ansible-tags">Ansible tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference/deployment.html#ansible-galaxy-and-composability">Ansible Galaxy and composability</a></li>
@@ -297,12 +313,12 @@ modifications.</p></li>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="tutorials/getting_started.html">
+          <a class="next-page" href="tutorials/introduction.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Getting started</div>
+                <div class="title">Introduction</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -367,6 +383,8 @@ modifications.</p></li>
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/scripts/furo.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
     <script src="_static/design-tabs.js"></script>
     <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>

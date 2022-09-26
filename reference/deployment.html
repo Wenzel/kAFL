@@ -9,6 +9,7 @@
         <title>Deployment - kAFL</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -157,7 +158,9 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/fuzzing_linux_kernel.html">Fuzzing the Linux Kernel</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">How-To Guides</span></p>
 <ul>
@@ -219,6 +222,22 @@ useful for deploying Cloud services and provisioning virtual machines.</p>
 <p class="admonition-title">Note</p>
 <p>As a user, you are only expected to update the Ansible <a class="reference external" href="https://github.com/IntelLabs/kAFL/blob/master/deploy/inventory">🗋 <code class="docutils literal notranslate"><span class="pre">deploy/inventory</span></code></a> if you want to perform a remote deployment. See Ansible’s <a class="reference external" href="https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html">inventory documentation</a>.</p>
 </div>
+<section id="system-modifications">
+<h2>System modifications<a class="headerlink" href="#system-modifications" title="Permalink to this heading">#</a></h2>
+<p>This is the list system level modifications made by the Ansible playbook when installing <em>kAFL</em>:</p>
+<ul class="simple">
+<li><p>checking for KVM’s compatibility with kAFL. If necessary, setup a new kernel:</p>
+<ul>
+<li><p><a class="reference external" href="https://github.com/IntelLabs/kafl.linux/releases/tag/kvm-nyx-5.10.73">download</a></p></li>
+<li><p>install (<code class="docutils literal notranslate"><span class="pre">5.10.73</span></code>)</p></li>
+<li><p>update <em>GRUB</em></p></li>
+<li><p>reboot</p></li>
+</ul>
+</li>
+<li><p>ensure current user is in <code class="docutils literal notranslate"><span class="pre">kvm</span></code> group</p></li>
+<li><p>ensure <code class="docutils literal notranslate"><span class="pre">/dev/kvm</span></code> device has permissions for the <code class="docutils literal notranslate"><span class="pre">kvm</span></code> group</p></li>
+</ul>
+</section>
 <section id="makefile-targets">
 <h2>Makefile targets<a class="headerlink" href="#makefile-targets" title="Permalink to this heading">#</a></h2>
 <div class="table-wrapper colwidths-auto docutils container">
@@ -345,7 +364,7 @@ make deploy -- --extra-vars <span class="s1">&#39;{&quot;ansible_connection&quot
 <section id="intellabs-kafl-ansible-collection">
 <h3>intellabs.kafl Ansible collection<a class="headerlink" href="#intellabs-kafl-ansible-collection" title="Permalink to this heading">#</a></h3>
 <p>The <a class="reference external" href="https://github.com/IntelLabs/kAFL/tree/master/deploy/intellabs/kafl"><code class="docutils literal notranslate"><span class="pre">intellabs.kafl</span></code></a> collection is available in the <a class="reference external" href="https://github.com/IntelLabs/kAFL/tree/master/deploy">📁<code class="docutils literal notranslate"><span class="pre">deploy</span></code></a> directory.</p>
-<p>It regroups all the essential roles and components required to setup kAFL (kernel package, QEMU, libxdc, capstone, fuzzer frontend …).</p>
+<p>It regroups all the essential components required to setup kAFL (kernel package, QEMU, libxdc, capstone, fuzzer frontend …).</p>
 <p>The roles are depending on each other, in such a way that including the <code class="docutils literal notranslate"><span class="pre">fuzzer</span></code> role will pull out the others:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="nt">roles</span><span class="p">:</span><span class="w"></span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">role</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">intellabs.kafl.fuzzer</span><span class="w"></span>
@@ -450,6 +469,7 @@ make deploy -- --extra-vars <span class="s1">&#39;{&quot;ansible_connection&quot
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Deployment</a><ul>
+<li><a class="reference internal" href="#system-modifications">System modifications</a></li>
 <li><a class="reference internal" href="#makefile-targets">Makefile targets</a></li>
 <li><a class="reference internal" href="#ansible-tags">Ansible tags</a></li>
 <li><a class="reference internal" href="#ansible-galaxy-and-composability">Ansible Galaxy and composability</a><ul>
@@ -474,6 +494,8 @@ make deploy -- --extra-vars <span class="s1">&#39;{&quot;ansible_connection&quot
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
     <script src="../_static/design-tabs.js"></script>
     <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
