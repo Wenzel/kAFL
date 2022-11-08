@@ -1,3 +1,3 @@
-qemu_url: 'https://github.com/IntelLabs/kafl.qemu'
-qemu_revision: 'kafl_stable'
+qemu_url: 'https://github.com/Wenzel/kafl.qemu'
+qemu_revision: 'fix_link_libexecinfo_alpine'
 qemu_root: "{{ kafl_install_root }}/qemu"

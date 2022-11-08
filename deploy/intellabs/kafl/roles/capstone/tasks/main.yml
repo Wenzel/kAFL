@@ -4,9 +4,7 @@
     name: "{{ item }}"
     state: present
   become: true
-  with_items:
-    - git
-    - build-essential
+  loop: "{{ default_vars.essential_pkgs }}"
 
 - name: Clone repo
   ansible.builtin.git:

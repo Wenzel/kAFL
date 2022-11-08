@@ -1,0 +1,13 @@
+deps_pkgs:
+  - pkgconfig
+  - glib-dev
+  - pixman
+  - gtk+3.0-dev
+  - libexecinfo-dev
+  - flex
+  - bison
+  - perl
+  - bash  # for ./compile_qemu_nyx.sh
+virtfs_pkgs:
+  - libcap
+  - libattr

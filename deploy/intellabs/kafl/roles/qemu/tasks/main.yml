@@ -1,23 +1,27 @@
-- name: Install build dependencies
-  ansible.builtin.apt:
+- name: Ensure minimal deps are available
+  ansible.builtin.package:
     name: "{{ item }}"
   become: true
-  with_items:
-    - git
-    - pkg-config
-    - build-essential
-    - libglib2.0-dev
-    - libpixman-1-dev
-    - libgtk-3-dev
+  loop: "{{ default_vars.essential_pkgs }}"
+
+- name: Gather OS specific variables
+  ansible.builtin.include_vars:
+    name: qemu
+    file: "{{ ansible_os_family }}.yml"
+
+- name: Install build dependencies
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  become: true
+  loop: "{{ qemu.deps_pkgs }}"
 
 - name: Install build dependencies for virtfs
   ansible.builtin.package:
     name: "{{ item }}"
     state: present
   become: true
-  with_items:
-    - libcap-dev
-    - libattr1-dev
+  loop: "{{ qemu.virtfs_pkgs }}"
 
 - name: Clone repo
   ansible.builtin.git:

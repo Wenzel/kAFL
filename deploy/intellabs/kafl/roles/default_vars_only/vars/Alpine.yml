@@ -1,0 +1,3 @@
+essential_pkgs:
+  - alpine-sdk
+  - git

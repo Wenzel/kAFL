@@ -1,0 +1,4 @@
+deps_pkgs:
+  - graphviz-dev
+  - python3-dev
+  - py3-setuptools
