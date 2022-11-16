@@ -48,9 +48,9 @@ Since the harness is built-in and auto-snapshots on first fuzzing input,
 launching the fuzzer is as simple as booting the kernel:
 
 ```
-KAFL_CONFIG_FILE=./kafl_config.yaml kafl_fuzz.py  --purge -w /dev/shm/kafl \
+kafl_fuzz.py  --purge -w /dev/shm/kafl \
 	--redqueen --grimoire -D --radamsa \
-	--kernel linux-guest/arch/x86/boot/bzImage \
+	--kernel arch/x86/boot/bzImage \
 	-t 0.1 -ts 0.01 -m 512 --log-crashes -p 2
 ```
 
