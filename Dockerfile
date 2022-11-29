@@ -30,10 +30,11 @@ RUN apt-get update && \
     apt-get install -y graphviz-dev && \
     apt-get autoremove && apt-get clean
 
-# configure kafl with a local kafl.yaml
-RUN echo "qemu_path: /usr/local/bin/qemu-system-x86_64" >> kafl.yaml && \
-    echo "ptdump_path: /usr/local/bin/ptdump" >> kafl.yaml && \
-    echo "radamsa_path: /usr/local/bin/radamsa" >> kafl.yaml
+# configure kafl
+RUN mkdir -p /etc/xdg/kafl && cd /etc/xdg/kafl && \
+    echo "qemu_path: /usr/local/bin/qemu-system-x86_64" >> settings.yaml && \
+    echo "ptdump_path: /usr/local/bin/ptdump" >> settings.yaml && \
+    echo "radamsa_path: /usr/local/bin/radamsa" >> settings.yaml
 
 # add fuzzer venv to PATH
 ENV PATH="/app/kafl/.venv/bin:$PATH"
@@ -47,4 +48,4 @@ ENV PYTHONFAULTHANDLER 1
 # ensure that python output is sent straight to container logs without buffering
 ENV PYTHONUNBUFFERED 1
 
-ENTRYPOINT ["kafl_fuzz.py"]
+ENTRYPOINT ["kafl"]
