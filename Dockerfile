@@ -1,4 +1,4 @@
-ARG baseimage=python:3.8-slim
+ARG baseimage=debian:bullseye-slim
 FROM ${baseimage} as build
 
 WORKDIR /app
