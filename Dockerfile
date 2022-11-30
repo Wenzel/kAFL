@@ -27,7 +27,7 @@ COPY --from=build /app/kafl/.venv ./.venv
 # kafl_fuzz.py depends on libgraphviz
 # TODO: can we remove this ? it pulls 156M
 RUN apt-get update && \
-    apt-get install -y graphviz-dev && \
+    apt-get install -y python3 graphviz-dev && \
     apt-get autoremove && apt-get clean
 
 # configure kafl
