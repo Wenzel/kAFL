@@ -50,9 +50,10 @@ COPY --from=build /app/kafl/fuzzer/dist/kafl /usr/local/bin
 # install config file
 COPY --from=build /app/settings.yaml /etc/xdg/kAFL/
 
+# apt upgrade to pass Snyk scan
 # TODO: switch to full static QEMU build
 # install shared libraries for QEMU
-RUN apt-get update && apt-get install -y --no-install-recommends libpixman-1-0 libpng16-16 libglib2.0-0 && apt-get clean
+RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends libpixman-1-0 libpng16-16 libglib2.0-0 && apt-get clean
 
 WORKDIR /mnt/workdir
 # define kAFL WORKDIR as volume
