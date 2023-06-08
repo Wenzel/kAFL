@@ -1,2 +1,12 @@
 # force default local connection plugin for localhost instead of ssh
 ansible_connection: local
+
+qemu_url: 'https://github.com/Wenzel/kafl.qemu'
+qemu_revision: 'debug_statements'
+qemu_build_type: debug_static
+
+fuzzer_url: 'https://github.com/Wenzel/kafl.fuzzer.git'
+fuzzer_revision: fix_qemu_image_if
+
+examples_url: 'https://github.com/Wenzel/kafl.targets.git'
+examples_revision: 'fix_windows'
