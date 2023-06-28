@@ -1,0 +1,36 @@
+- name: Add Hashicorp repo key
+  get_url:
+    url: https://apt.releases.hashicorp.com/gpg
+    dest: /tmp/hashicorp.key
+
+- name: Unpack GPG key
+  shell: cat /tmp/hashicorp.key | gpg --batch --yes --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+  become: true
+
+- name: Remove temp file
+  file:
+    path: /tmp/hashicorp.key
+    state: absent
+
+- name: Add Hashicorp repository
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com {{ ansible_lsb.codename }} main"
+    filename: hashicorp
+    state: present
+  become: true
+
+- name: Ensure packer and vagrant are installed
+  apt:
+    name:
+      - packer
+      - vagrant
+    update_cache: true
+  become: true
+
+- name: Ensure /etc/qemu exists
+  file:
+    path: /etc/qemu
+    state: directory
+    mode: 
+    
+- name: Ensure /etc/qemu/bridge.conf exists with the right content
