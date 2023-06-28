@@ -7,3 +7,6 @@
     force: "{{ force_clone }}"
   tags:
     - clone
+
+- import_tasks: template_windows.yml
+  when: "'examples-template-windows' in ansible_run_tags"

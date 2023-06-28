@@ -1,0 +1,71 @@
+- name: Install MinGW GNU C Compiler
+  apt:
+    name: gcc-mingw-w64-x86-64
+  become: true
+
+- name: Check hashicorp repo key
+  stat:
+    path: /usr/share/keyrings/hashicorp-archive-keyring.gpg
+  register: key_stat
+
+- name: Add Hashicorp repo key
+  block:
+    - name: Download Hashicorp key
+      get_url:
+        url: https://apt.releases.hashicorp.com/gpg
+        dest: /tmp/hashicorp.key
+
+    - name: Unpack GPG key
+      shell: cat /tmp/hashicorp.key | gpg --batch --yes --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+      become: true
+
+    - name: Remove temp file
+      file:
+        path: /tmp/hashicorp.key
+        state: absent
+  when: not key_stat.stat.exists
+
+- name: Add Hashicorp repository
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com {{ ansible_lsb.codename }} main"
+    filename: hashicorp
+    state: present
+  become: true
+
+- name: Ensure packer and vagrant are installed
+  apt:
+    name:
+      - packer
+      # vagrant-host-shell plugin doesn't support 2.3.7-1 or newer
+      - vagrant=2.3.6-1
+      # dependency for vagrant plugins
+      - ruby-dev
+      # dependency for vagrant-libvirt
+      - libvirt-dev
+    update_cache: true
+  become: true
+
+- name: Install vagrant plugins
+  command: vagrant plugin install vagrant-libvirt vagrant-host-shell
+
+- name: Ensure /etc/qemu exists
+  file:
+    path: /etc/qemu
+    state: directory
+  become: true
+
+- name: Ensure /etc/qemu/bridge.conf is configured to allow virbr0
+  lineinfile:
+    path: /etc/qemu/bridge.conf
+    line: 'allow virbr0'
+    mode: 0644
+    group: "{{ ansible_user_id }}"
+    backup: true
+    create: true
+  become: true
+
+- name: Ensure qemu-bridge-helper is setuid
+  file:
+    path: /usr/lib/qemu/qemu-bridge-helper
+    mode: 'u+s'
+  become: true
