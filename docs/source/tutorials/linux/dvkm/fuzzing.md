@@ -22,10 +22,29 @@ Ensure you are running inside the [kAFL virtualenv](../../installation.md#4-sett
 
 To start fuzzing, run the following `kafl fuzz` command:
 
+::::{tab-set}
+:::{tab-item} Local setup
 ~~~shell
 cd kafl/examples/linux-user/dvkm
 (venv) $ kafl fuzz --purge --log-crashes
 ~~~
+:::
+:::{tab-item} Docker image
+~~~shell
+mkdir -p $KAFL_WORKDIR
+docker run \
+        -ti --rm \
+        --device /dev/kvm \
+        --user $(id -u):$(id -g) \
+        --group-add $(getent group kvm | cut -d: -f3) \
+        -v $kAFL_WORKDIR:/mnt/workdir \
+        -v $PWD/kafl.yaml:/mnt/kafl.yaml \
+        -e KAFL_CONFIG_FILE=/mnt/kafl.yaml \
+        intellabs/kafl \
+        fuzz --purge --log-crashes
+~~~
+:::
+::::
 
 - [`--purge`](../../../reference/fuzzer_configuration.md#purge): removes the `$KAFL_WORKDIR` directory if it already exists before starting the new campaign.
 - [`--log-crashes`](../../../reference/fuzzer_configuration.md#log_crashes): redirect hprintf log message to a log file, and to `$KAFL_WORKDIR/logs/` for any new found crashing or timeout payload.
